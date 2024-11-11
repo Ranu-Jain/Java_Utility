@@ -1,0 +1,69 @@
+2024-10-29 03:47:39 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - Inside getEmailTemplateName Method start
+2024-10-29 03:47:39 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - Inside getEmailTemplateName Method start
+2024-10-29 03:47:39 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - Inside getEmailTemplateName Method start
+2024-10-29 03:47:39 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - Inside ApiClient Constructor
+2024-10-29 03:47:40 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - Inside ApiClient Constructor
+2024-10-29 03:47:40 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - 
+2024-10-29 03:47:40 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - Inside ApiClient Constructor
+2024-10-29 03:47:40 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - Inside ApiClient Constructor
+2024-10-29 03:47:40 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - 
+2024-10-29 03:48:03 [background-preinit] INFO  o.h.validator.internal.util.Version  - userId= - correlationId= - HV000001: Hibernate Validator 8.0.1.Final
+2024-10-29 03:48:03 [restartedMain] INFO  c.s.e.NotificationProducerAndConsumerApplication  - userId= - correlationId= - Starting NotificationProducerAndConsumerApplication using Java 21.0.3 with PID 4208 (E:\Prajapati_v1018344\epay_java_utilities\notification-service\build\classes\java\main started by V1018344 in E:\Prajapati_v1018344\epay_java_utilities\notification-service)
+2024-10-29 03:48:03 [restartedMain] INFO  c.s.e.NotificationProducerAndConsumerApplication  - userId= - correlationId= - No active profile set, falling back to 1 default profile: "default"
+2024-10-29 03:48:03 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor  - userId= - correlationId= - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-10-29 03:48:03 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor  - userId= - correlationId= - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-10-29 03:48:05 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer  - userId= - correlationId= - Tomcat initialized with port 8081 (http)
+2024-10-29 03:48:05 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol  - userId= - correlationId= - Initializing ProtocolHandler ["http-nio-8081"]
+2024-10-29 03:48:05 [restartedMain] INFO  o.a.catalina.core.StandardService  - userId= - correlationId= - Starting service [Tomcat]
+2024-10-29 03:48:05 [restartedMain] INFO  o.a.catalina.core.StandardEngine  - userId= - correlationId= - Starting Servlet engine: [Apache Tomcat/10.1.28]
+2024-10-29 03:48:05 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/]  - userId= - correlationId= - Initializing Spring embedded WebApplicationContext
+2024-10-29 03:48:05 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext  - userId= - correlationId= - Root WebApplicationContext: initialization completed in 1480 ms
+2024-10-29 03:48:05 [restartedMain] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - Inside ApiClient Constructor
+2024-10-29 03:48:05 [restartedMain] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - Inside ApiClient Constructor
+2024-10-29 03:48:05 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer  - userId= - correlationId= - LiveReload server is running on port 35729
+2024-10-29 03:48:05 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol  - userId= - correlationId= - Starting ProtocolHandler ["http-nio-8081"]
+2024-10-29 03:48:05 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer  - userId= - correlationId= - Tomcat started on port 8081 (http) with context path '/'
+2024-10-29 03:48:05 [restartedMain] INFO  c.s.e.NotificationProducerAndConsumerApplication  - userId= - correlationId= - Started NotificationProducerAndConsumerApplication in 2.762 seconds (process running for 3.721)
+2024-10-29 03:48:06 [restartedMain] INFO  c.s.e.NotificationProducerAndConsumerApplication  - userId= - correlationId= - Main Application Notification Utility INFO
+2024-10-29 03:48:06 [restartedMain] ERROR c.s.e.NotificationProducerAndConsumerApplication  - userId= - correlationId= - Main Application Notification Utility Error
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - inside generateEmailBody Method start
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - Inside getEmailTemplateName Method start
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - Inside getEmailTemplateName Method start
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - Inside getEmailTemplateName Method start
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside ApiClient Constructor
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside ApiClient Constructor
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside HttpHeaders Method start
+2024-10-29 22:29:25 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside HttpHeaders Method End
+2024-10-29 22:29:26 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside ApiClient Constructor
+2024-10-29 22:29:26 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside ApiClient Constructor
+2024-10-29 22:29:26 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside HttpHeaders Method start
+2024-10-29 22:29:26 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - inside HttpHeaders Method End
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - sendEmail,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - ClassName - EmailTemplateService,MethodName - generateEmailBody, method-start
+2024-10-29 23:49:30 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - ClassName - EmailTemplateService,MethodName - generateEmailBody, method-end
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - sendEmail,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - sendEmail,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - sendEmail,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-start
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - setMimeMessageHelper,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  c.s.e.thirdpartyservice.EmailClient  - userId= - correlationId= - ClassName - EmailClient,MethodName - createMimeMessage,Method-end
+2024-10-29 23:49:30 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - ClassName - EmailTemplateService,MethodName - getEmailTemplateName, Method-start
+2024-10-29 23:49:30 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - ClassName - EmailTemplateService,MethodName - getEmailTemplateName, Method-start
+2024-10-29 23:49:30 [Test worker] INFO  com.sbi.epay.service.EmailService  - userId= - correlationId= - ClassName - EmailTemplateService,MethodName - getEmailTemplateName, Method-start
+2024-10-29 23:49:31 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - ClassName - ApiClient, Method Name - prepareHttpHeaders  Start
+2024-10-29 23:49:31 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - ClassName - ApiClient, Method Name - prepareHttpHeaders  End
+2024-10-29 23:49:31 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - ClassName - ApiClient, Method Name - prepareHttpHeaders  Start
+2024-10-29 23:49:31 [Test worker] INFO  com.sbi.epay.client.ApiClient  - userId= - correlationId= - ClassName - ApiClient, Method Name - prepareHttpHeaders  End

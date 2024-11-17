@@ -35,7 +35,7 @@ public class KeyProviderService {
      * @return a SecretKey MEK
      */
     public static SecretKey getDecryptedMEK(String mek, String kek, String aeK, EncryptionDecryptionAlgo algorithm, GCMIvLength gcmIvLength, GCMTagLength gcmTagLength) throws EncryptionDecryptionException {
-        log.info("KeyProviderService :: getDecryptedMEK ");
+        log.debug("KeyProviderService :: getDecryptedMEK mek {}, kek {}, aeK {}, algorithm {}, gcmIvLength {} and gcmTagLength {}", mek, kek, aeK, algorithm, gcmIvLength, gcmTagLength);
         String encodedKeK = DecryptionService.decryptKey(kek, aeK, algorithm, gcmIvLength, gcmTagLength);
         String encodedMeK = DecryptionService.decryptKey(mek, encodedKeK, algorithm, gcmIvLength, gcmTagLength);
         return DecryptionService.decodedSecretKey(encodedMeK);

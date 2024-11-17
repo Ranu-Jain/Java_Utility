@@ -48,10 +48,8 @@ public class DecryptionService {
      */
     public static String decryptKey(String key, String keyToDecrypt, @NonNull EncryptionDecryptionAlgo algorithm, @NonNull GCMIvLength gcmIvLength, @NonNull GCMTagLength gcmTagLength) throws EncryptionDecryptionException {
         try {
-            log.info("DecryptionService :: decryptKeK start");
             byte[] decSecretKeyBytes = decrypt(decodedSecretKey(key).getEncoded(), decodedSecretKey(keyToDecrypt), algorithm, gcmIvLength, gcmTagLength);
             SecretKey secretKeyKeK = new SecretKeySpec(decSecretKeyBytes, "AES");
-            log.info("DecryptionService :: decryptKeK end");
             return Base64.getEncoder().encodeToString(secretKeyKeK.getEncoded());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
                  InvalidAlgorithmParameterException | IllegalArgumentException | UnsupportedOperationException |
@@ -90,23 +88,20 @@ public class DecryptionService {
      * @return a SecretKey
      */
     public static SecretKey decodedSecretKey(String key) {
-        log.info("DecryptionService :: decodedSecretKey start");
+        log.debug("DecryptionService :: decodedSecretKey key {}", key);
         byte[] decodedKey = Base64.getDecoder().decode(key);
-        log.info("DecryptionService :: decodedSecretKey end");
         return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
     }
 
     private static byte[] decrypt(byte[] value, SecretKey secretKey, EncryptionDecryptionAlgo algorithm, GCMIvLength gcmIvLength, GCMTagLength gcmTagLength) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-        log.info("DecryptionService :: decSecretKeyWithOtherSecretKey  start");
+        log.debug("DecryptionService :: decryptKeK key {}, value {}, algorithm {}, gcmIvLength {}, gcmTagLength {}", secretKey, value, algorithm, gcmIvLength, gcmTagLength);
         byte[] iv = Arrays.copyOfRange(value, 0, gcmIvLength.getLengthInBytes());
         byte[] encryptedKey = Arrays.copyOfRange(value, gcmIvLength.getLengthInBytes(), value.length);
 
         Cipher cipher = Cipher.getInstance(algorithm.getName());
         GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(gcmTagLength.getLengthInBits(), iv);
         cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
-        byte[] decSecretKeyBytes = cipher.doFinal(encryptedKey);
-        log.info("DecryptionService :: decSecretKeyWithOtherSecretKey  end");
-        return decSecretKeyBytes;
+        return cipher.doFinal(encryptedKey);
     }
 
 }

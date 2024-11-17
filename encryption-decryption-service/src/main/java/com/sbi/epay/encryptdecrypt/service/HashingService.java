@@ -24,7 +24,7 @@ public class HashingService {
 
     public static byte[] generateHash(@NonNull byte[] data, @NonNull HashAlgorithm algorithm) throws EncryptionDecryptionException {
         try {
-            log.debug("HashingService :: generateHash started ");
+            log.debug("HashingService :: generateHash  data {}, algorithm {}", data, algorithm);
             MessageDigest digest = MessageDigest.getInstance(algorithm.getAlgorithmName());
             return digest.digest(data);
         } catch (NoSuchAlgorithmException e) {

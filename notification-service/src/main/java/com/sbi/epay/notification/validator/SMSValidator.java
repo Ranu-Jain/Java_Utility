@@ -51,7 +51,7 @@ public class SMSValidator {
          *  then it throw exception
          **/
         if (!CollectionUtils.isEmpty(errorList)) {
-            logger.info("Error -> ",errorList);
+            logger.error("Error -> ",errorList);
             throw new NotificationException(errorList);
         }
         logger.info("ClassName - SMSValidator,MethodName - validateSMS, method-end");

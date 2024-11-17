@@ -47,6 +47,7 @@ public class EMailValidator {
             errorList.add(new ErrorDto(NotificationConstant.MANDATORY_ERROR_CODE, MessageFormat.format(NotificationConstant.MANDATORY_ERROR_MESSAGE, "Email Body")));
         }
         if (!CollectionUtils.isEmpty(errorList)) {
+            logger.error("Error -> ",errorList);
             throw new NotificationException(errorList);
         }
         logger.info("ClassName - EMailValidator,MethodName -validateEMAIL, Method-end ");

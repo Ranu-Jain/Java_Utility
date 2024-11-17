@@ -1,7 +1,10 @@
-package com.sbi.epay.model;
+package com.sbi.epay.notification.model;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
  * Class Name: ErrorDto
@@ -15,6 +18,9 @@ import lombok.AllArgsConstructor;
  * Version:1.0
  */
 @AllArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class ErrorDto {
     private String errorCode;
     private String errorMessage;

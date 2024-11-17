@@ -1,15 +1,15 @@
-package com.sbi.epay.validator;
+package com.sbi.epay.notification.validator;
 
-import com.sbi.epay.exception.NotificationException;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import com.sbi.epay.model.EmailDTO;
-import com.sbi.epay.model.ErrorDto;
-import com.sbi.epay.service.EmailService;
-import com.sbi.epay.util.NotificationConstant;
+import com.sbi.epay.notification.exception.NotificationException;
+import com.sbi.epay.notification.model.EmailDTO;
+import com.sbi.epay.notification.model.ErrorDto;
+import com.sbi.epay.notification.util.NotificationConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,16 +38,14 @@ public class EMailValidator {
         List<ErrorDto> errorList = new ArrayList<>();
 
         if (StringUtils.isEmpty(emailRequest.getRecipient())) {
-            errorList.add(new ErrorDto(NotificationConstant.MAIL_CODE_001, NotificationConstant.MAIL_MSG_001));
+            errorList.add(new ErrorDto(NotificationConstant.MANDATORY_ERROR_CODE, MessageFormat.format(NotificationConstant.MANDATORY_ERROR_MESSAGE, "Recipient Address")));
         }
         if (StringUtils.isBlank(emailRequest.getSubject())) {
-            errorList.add(new ErrorDto(NotificationConstant.MAIL_CODE_002, NotificationConstant.MAIL_MSG_002));
+            errorList.add(new ErrorDto(NotificationConstant.MANDATORY_ERROR_CODE, MessageFormat.format(NotificationConstant.MANDATORY_ERROR_MESSAGE, "Subject")));
         }
-
         if (StringUtils.isBlank(emailRequest.getBody())) {
-            errorList.add(new ErrorDto(NotificationConstant.MAIL_CODE_003, NotificationConstant.MAIL_CODE_003));
+            errorList.add(new ErrorDto(NotificationConstant.MANDATORY_ERROR_CODE, MessageFormat.format(NotificationConstant.MANDATORY_ERROR_MESSAGE, "Email Body")));
         }
-
         if (!CollectionUtils.isEmpty(errorList)) {
             throw new NotificationException(errorList);
         }

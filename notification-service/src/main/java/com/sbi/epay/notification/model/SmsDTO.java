@@ -1,4 +1,4 @@
-package com.sbi.epay.model;
+package com.sbi.epay.notification.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,5 @@
-package com.sbi.epay.client;
+package com.sbi.epay.notification.client;
 
-import com.sbi.epay.logging.utility.LoggerFactoryUtility;
-import com.sbi.epay.logging.utility.LoggerUtility;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 public class ApiClient {
-    static LoggerUtility logger = LoggerFactoryUtility.getLogger(ApiClient.class);
     private final String baseUrl;
     private final RestTemplate restTemplate;
 

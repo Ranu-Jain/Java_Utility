@@ -1,13 +1,14 @@
-package com.sbi.epay.service;
+package com.sbi.epay.notification.service;
 
 
-import com.sbi.epay.exception.NotificationException;
+import com.sbi.epay.notification.model.EmailDTO;
+import com.sbi.epay.notification.exception.NotificationException;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import com.sbi.epay.model.EmailDTO;
-import com.sbi.epay.thirdpartyservice.EmailClient;
-import com.sbi.epay.validator.EMailValidator;
+import com.sbi.epay.notification.thirdpartyservice.EmailClient;
+import com.sbi.epay.notification.validator.EMailValidator;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,15 +24,10 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-
-
+@RequiredArgsConstructor
 public class EmailService {
     private final EmailClient emailClient;
     LoggerUtility logger = LoggerFactoryUtility.getLogger(EmailService.class);
-
-    public EmailService(EmailClient emailClient) {
-        this.emailClient = emailClient;
-    }
 
     /**
      * This method that is used for validating emailDTO object and send email

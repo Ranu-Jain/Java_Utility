@@ -1,12 +1,12 @@
-package com.sbi.epay.service;
+package com.sbi.epay.notification.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sbi.epay.exception.NotificationException;
+import com.sbi.epay.notification.model.SmsDTO;
+import com.sbi.epay.notification.exception.NotificationException;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import com.sbi.epay.model.SmsDTO;
-import com.sbi.epay.thirdpartyservice.SmsClient;
-import com.sbi.epay.validator.SMSValidator;
+import com.sbi.epay.notification.thirdpartyservice.SmsClient;
+import com.sbi.epay.notification.validator.SMSValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +22,10 @@ import org.springframework.stereotype.Service;
  * Version:1.0
  */
 @Service
-
+@RequiredArgsConstructor
 public final class SmsService {
     LoggerUtility logger = LoggerFactoryUtility.getLogger(SmsService.class);
     private final SmsClient smsClient;
-
-    public SmsService(SmsClient smsClient) {
-        this.smsClient = smsClient;
-    }
 
     /**
      * This method will be used for validating smsDTO object and send sms

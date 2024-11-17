@@ -1,15 +1,15 @@
-package com.sbi.epay.validator;
+package com.sbi.epay.notification.validator;
 
-import com.sbi.epay.exception.NotificationException;
+import com.sbi.epay.notification.exception.NotificationException;
+import com.sbi.epay.notification.model.ErrorDto;
+import com.sbi.epay.notification.model.SmsDTO;
+import com.sbi.epay.notification.util.NotificationConstant;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import com.sbi.epay.model.ErrorDto;
-import com.sbi.epay.model.SmsDTO;
-import com.sbi.epay.service.EmailService;
-import com.sbi.epay.util.NotificationConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,16 +38,16 @@ public class SMSValidator {
         List<ErrorDto> errorList = new ArrayList<>();
 
         if (StringUtils.isEmpty(smsRequest.getMessage())) {
-            errorList.add(new ErrorDto(NotificationConstant.SMS_CODE_001, NotificationConstant.SMS_MSG_001));
+            errorList.add(new ErrorDto(NotificationConstant.MANDATORY_ERROR_CODE, MessageFormat.format(NotificationConstant.MANDATORY_ERROR_MESSAGE, "SMS Message")));
         }
 
         if (StringUtils.isEmpty(smsRequest.getMobileNumber())) {
-            errorList.add(new ErrorDto(NotificationConstant.MAIL_CODE_002, NotificationConstant.SMS_MSG_002));
+            errorList.add(new ErrorDto(NotificationConstant.MANDATORY_ERROR_CODE, MessageFormat.format(NotificationConstant.MANDATORY_ERROR_MESSAGE, "Mobile Number")));
         }
 
         /**
          *  this method of Collection.isEmpty check if
-         *  the errolist have some error
+         *  the error list have some error
          *  then it throw exception
          **/
         if (!CollectionUtils.isEmpty(errorList)) {

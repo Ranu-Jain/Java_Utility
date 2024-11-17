@@ -1,9 +1,10 @@
-package com.sbi.epay.exception;
+package com.sbi.epay.notification.exception;
 
-import com.sbi.epay.logging.utility.LoggerFactoryUtility;
-import com.sbi.epay.logging.utility.LoggerUtility;
-import com.sbi.epay.model.ErrorDto;
+import com.sbi.epay.notification.model.ErrorDto;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ import java.util.List;
  */
 
 @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class NotificationException extends RuntimeException {
 
     private String errorCode;
@@ -46,12 +50,4 @@ public class NotificationException extends RuntimeException {
     public NotificationException(List<ErrorDto> errorMessages) {
         this.errorMessages = errorMessages;
     }
-
-    /**
-     * this is  Default constructor used for test cases
-     */
-    public NotificationException() {
-        super();
-    }
-
 }

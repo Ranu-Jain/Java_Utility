@@ -1,9 +1,9 @@
-package com.sbi.epay.service;
+package com.sbi.epay.notification.service;
 
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import com.sbi.epay.util.NotificationConstant;
-import com.sbi.epay.util.enums.EmailType;
+import com.sbi.epay.notification.util.NotificationConstant;
+import com.sbi.epay.notification.util.enums.EmailType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -42,17 +42,11 @@ public class EmailTemplateService {
      */
     public String getEmailTemplateName(EmailType type) {
         logger.info("ClassName - EmailTemplateService,MethodName - getEmailTemplateName, Method-start");
-        switch (type) {
-            case CUSTOMER -> {
-                return NotificationConstant.CUSTOMER_TEMPLATE;
-            }
-            case ORDER -> {
-                return NotificationConstant.ORDER_TEMPLATE;
-            }
-            case null, default -> {
-                return StringUtils.EMPTY;
-            }
-        }
+        return switch (type) {
+            case CUSTOMER -> NotificationConstant.CUSTOMER_TEMPLATE;
+            case ORDER -> NotificationConstant.ORDER_TEMPLATE;
+            default -> StringUtils.EMPTY;
+        };
 
     }
 

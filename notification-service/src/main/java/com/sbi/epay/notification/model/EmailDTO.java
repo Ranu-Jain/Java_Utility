@@ -1,7 +1,7 @@
-package com.sbi.epay.model;
+package com.sbi.epay.notification.model;
 
 
-import com.sbi.epay.util.enums.EmailType;
+import com.sbi.epay.notification.util.enums.EmailType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

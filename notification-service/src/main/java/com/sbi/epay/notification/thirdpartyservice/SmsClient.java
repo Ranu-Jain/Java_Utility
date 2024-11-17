@@ -1,11 +1,11 @@
-package com.sbi.epay.thirdpartyservice;
+package com.sbi.epay.notification.thirdpartyservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sbi.epay.client.ApiClient;
-import com.sbi.epay.exception.NotificationException;
-import com.sbi.epay.model.SmsDTO;
-import com.sbi.epay.util.NotificationConstant;
+import com.sbi.epay.notification.client.ApiClient;
+import com.sbi.epay.notification.exception.NotificationException;
+import com.sbi.epay.notification.model.SmsDTO;
+import com.sbi.epay.notification.util.NotificationConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +13,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.text.MessageFormat;
 
 /**
  * Class Name: SmsClient
@@ -60,7 +62,7 @@ public class SmsClient extends ApiClient {
         if (response.getStatusCode().is2xxSuccessful()) {
             return true;
         } else {
-            throw new NotificationException(NotificationConstant.SMS_CODE_005, NotificationConstant.SMS_MSG_005);
+            throw new NotificationException(NotificationConstant.FAILURE_CODE, MessageFormat.format(NotificationConstant.FAILURE_MSG, "SMS"));
         }
 
     }

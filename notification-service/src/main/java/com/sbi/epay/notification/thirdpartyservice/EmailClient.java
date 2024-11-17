@@ -1,19 +1,20 @@
-package com.sbi.epay.thirdpartyservice;
+package com.sbi.epay.notification.thirdpartyservice;
 
-import com.sbi.epay.exception.NotificationException;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import com.sbi.epay.model.EmailDTO;
-import com.sbi.epay.service.EmailTemplateService;
-import com.sbi.epay.service.SmsService;
-import com.sbi.epay.util.NotificationConstant;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import com.sbi.epay.notification.exception.NotificationException;
+import com.sbi.epay.notification.model.EmailDTO;
+import com.sbi.epay.notification.service.EmailTemplateService;
+import com.sbi.epay.notification.util.NotificationConstant;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.text.MessageFormat;
 
 /**
  * Class Name: EmailClient
@@ -30,9 +31,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class EmailClient {
-    LoggerUtility logger = LoggerFactoryUtility.getLogger(EmailClient.class);
     private final JavaMailSender javaMailSender;
     private final EmailTemplateService emailTemplateService;
+    LoggerUtility logger = LoggerFactoryUtility.getLogger(EmailClient.class);
+
     /**
      * This method will be used for calling createMimeMessage and send method
      *
@@ -47,8 +49,8 @@ public class EmailClient {
             javaMailSender.send(message);
             return true;
         } catch (MessagingException e) {
-            logger.info("ClassName - EmailClient,MethodName - sendEmail, inside catch"+e);
-            throw new NotificationException(NotificationConstant.MAIL_CODE_004, NotificationConstant.MAIL_MSG_004);
+            logger.info("ClassName - EmailClient,MethodName - sendEmail, inside catch" + e);
+            throw new NotificationException(NotificationConstant.FAILURE_CODE, MessageFormat.format(NotificationConstant.FAILURE_MSG, "EMail"));
         }
     }
 

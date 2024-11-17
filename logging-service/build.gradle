@@ -9,10 +9,10 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework:spring-webmvc:5.3.29'
+	implementation 'org.springframework:spring-webmvc:6.11.23'
 	implementation 'javax.servlet:javax.servlet-api:3.1.0'
 	implementation 'org.slf4j:slf4j-simple:1.7.30'
-	implementation 'ch.qos.logback:logback-classic:1.4.11'
+	implementation 'ch.qos.logback:logback-classic:1.4.12'
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 }
 

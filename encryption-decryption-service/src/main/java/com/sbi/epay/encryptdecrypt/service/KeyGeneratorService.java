@@ -4,9 +4,11 @@ package com.sbi.epay.encryptdecrypt.service;
 import com.sbi.epay.encryptdecrypt.constant.EncryptionDecryptionConstants;
 import com.sbi.epay.encryptdecrypt.exception.EncryptionDecryptionException;
 import com.sbi.epay.encryptdecrypt.util.KeyGenerationAlgo;
+import com.sbi.epay.encryptdecrypt.util.SecretKeyLength;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
 import jdk.jfr.Description;
+import lombok.NonNull;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -33,24 +35,24 @@ public class KeyGeneratorService {
     /**
      * this method will generate a SecretKey based on size specified (256/128)
      *
-     * @param size it specifies the size of key
+     * @param secretKeyLength it specifies the size of key
      * @return the String of encoded SecretKey
      */
-    public String generateKeyByDefaultAlgo(int size) throws EncryptionDecryptionException {
-        log.debug("KeyGeneratorService :: generateKey size {}", size);
-        return Base64.getEncoder().encodeToString(getSecretKey(size, KeyGenerationAlgo.AES).getEncoded());
+    public String generateKeyByDefaultAlgo(@NonNull SecretKeyLength secretKeyLength) throws EncryptionDecryptionException {
+        log.debug("KeyGeneratorService :: generateKey size {}", secretKeyLength);
+        return Base64.getEncoder().encodeToString(getSecretKey(secretKeyLength, KeyGenerationAlgo.AES).getEncoded());
     }
 
     /**
      * this method will generate a SecretKey based on size specified (256/128)
      *
-     * @param size              it specifies the size of key
+     * @param secretKeyLength   it specifies the size of key
      * @param keyGenerationAlgo it specifies the algorithm for key generation
      * @return the String of encoded SecretKey
      */
-    public String generateKeyByAlgo(int size, KeyGenerationAlgo keyGenerationAlgo) throws EncryptionDecryptionException {
-        log.debug("KeyGeneratorService :: generateKey size {}, keyGenerationAlgo {} ", size, keyGenerationAlgo);
-        return Base64.getEncoder().encodeToString(getSecretKey(size, keyGenerationAlgo).getEncoded());
+    public String generateKeyByAlgo(@NonNull SecretKeyLength secretKeyLength, @NonNull KeyGenerationAlgo keyGenerationAlgo) throws EncryptionDecryptionException {
+        log.debug("KeyGeneratorService :: generateKey size {}, keyGenerationAlgo {} ", secretKeyLength, keyGenerationAlgo);
+        return Base64.getEncoder().encodeToString(getSecretKey(secretKeyLength, keyGenerationAlgo).getEncoded());
     }
 
 
@@ -61,11 +63,11 @@ public class KeyGeneratorService {
      * @param keyGenerationAlgo it specifies the algorithm for key generation
      * @return the SecretKey of encoded SecretKey
      */
-    public SecretKey getSecretKey(int keySize, KeyGenerationAlgo keyGenerationAlgo) throws EncryptionDecryptionException {
+    public SecretKey getSecretKey(SecretKeyLength keySize, KeyGenerationAlgo keyGenerationAlgo) throws EncryptionDecryptionException {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance(keyGenerationAlgo.getAlgorithmName());
             SecureRandom random = new SecureRandom();
-            keyGen.init(keySize, random);
+            keyGen.init(keySize.getLengthInBits(), random);
             return keyGen.generateKey();
         } catch (NoSuchAlgorithmException | InvalidParameterException e) {
             log.error("KeyGeneratorService :: getSecretKey ", e);

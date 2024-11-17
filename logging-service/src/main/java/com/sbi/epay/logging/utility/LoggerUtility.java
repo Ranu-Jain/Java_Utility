@@ -70,7 +70,7 @@ public class LoggerUtility {
      * @param arguments
      */
     public void debug(String format, Object... arguments) {
-        logger.trace(format, arguments);
+        logger.debug(format, arguments);
     }
 
     /**

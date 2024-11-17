@@ -1,160 +1,88 @@
-<configuration> 
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> 
-
-        <encoder> 
-
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}  - userId=%X{userId} - correlationId=%X{correlationId} - %msg\n  </pattern>
-
-        </encoder> 
-
+        </encoder>
     </appender>
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
 
-        <file>D:/logs/app.log</file> 
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> 
-
-            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern> 
-
-            <maxHistory>30</maxHistory> 
-
-        </rollingPolicy> 
-
-        <encoder> 
-
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}  - userId=%X{userId} - correlationId=%X{correlationId} - %msg\n</pattern>
-
-        </encoder> 
-
-    </appender> 
-
-  
+        </encoder>
+    </appender>
 
     <!-- Including MDC data in the log pattern --> 
 
-    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
-
-        <file>E:/logs/application.json</file> 
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> 
-
-            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.json</fileNamePattern> 
-
-            <maxHistory>30</maxHistory> 
-
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/application.json</file>
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.json</fileNamePattern>
+            <maxHistory>30</maxHistory>
         </rollingPolicy> 
 
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"> 
-
-            <providers> 
-
-                <timestamp> 
-
-                    <timeZone>UTC</timeZone> 
-
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
                 </timestamp> 
 
-                <pattern> 
-
-                    <pattern> 
-
-                        { 
-
-                            "timestamp": "%date", 
-
-                            "level": "%level", 
-
-                            "logger": "%logger", 
-
-                            "thread": "%thread", 
-
-                            "message": "%message", 
-
-                            "userId": "%X{userId}", 
-
-                            "requestId": "%X{requestId}", 
-
-                            "exception": "%ex" 
-
-                        } 
-
-                    </pattern> 
-
-                </pattern> 
-
-            </providers> 
-
-        </encoder> 
-
+                <pattern>
+                    <pattern>
+                        {
+                            "timestamp": "%date",
+                            "level": "%level",
+                            "logger": "%logger",
+                            "thread": "%thread",
+                            "message": "%message",
+                            "userId": "%X{userId}",
+                            "requestId": "%X{requestId}",
+                            "exception": "%ex"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
     </appender> 
 
-     <appender name="Logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender"> 
-
-        <destination>localhost:5000</destination> 
-
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"> 
-
-            <providers> 
-
-                <timestamp> 
-
-                    <timeZone>UTC</timeZone> 
-
-                </timestamp> 
-
-                <pattern> 
-
-                    <pattern> 
-
-                        { 
-
-                            "timestamp": "%date", 
-
-                            "level": "%level", 
-
-                            "logger": "%logger", 
-
-                            "thread": "%thread", 
-
-                             "mdc": { 
-
-                                "userId": "%X{userId}", 
-
-                                "requestId": "%X{requestId}" 
-
-                            }, 
-
-                          "message": "%message", 
-
-                            "exception": "%ex" 
-
-                        } 
-
-                    </pattern> 
-
-                </pattern> 
-
-            </providers> 
-
-        </encoder> 
-
+     <appender name="Logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                            "timestamp": "%date",
+                            "level": "%level",
+                            "logger": "%logger",
+                            "thread": "%thread",
+                             "mdc": {
+                                "userId": "%X{userId}",
+                                "requestId": "%X{requestId}"
+                            },
+                          "message": "%message",
+                            "exception": "%ex"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
     </appender> 
 
-  
+    <root level="TRACE">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="JSON_FILE" />
+    </root>
 
-    <root level="INFO"> 
-
-        <appender-ref ref="CONSOLE" /> 
-
-        <appender-ref ref="FILE" /> 
-
-<!--        <appender-ref ref="JSON_FILE" /> -->
-
-<!--        <appender-ref ref="Logstash" /> -->
-
- 
-
-    </root> 
 
 </configuration>

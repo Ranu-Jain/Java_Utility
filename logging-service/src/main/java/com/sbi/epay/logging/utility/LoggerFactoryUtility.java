@@ -28,24 +28,22 @@ public class LoggerFactoryUtility {
     }
 
     /**
-     * satic method method to return a loggerUtility instance for a given class
+     * Static method to return a loggerUtility instance for a given class
      *
      * @param clazz
      * @return Logger
      */
     public static LoggerUtility getLogger(Class<?> clazz) {
-
         Logger logger=LoggerFactory.getLogger(clazz);//gets SL4J's logger
         return new LoggerUtility(logger);//wrap in LoggerUtility
     }
 
     /**
-     * satic method method to return by name
+     * Static method to return by name
      * @param name
      * @return
      */
     public static LoggerUtility getLogger(String name) {
-
         Logger logger=LoggerFactory.getLogger(name);
         return new LoggerUtility(logger);
     }

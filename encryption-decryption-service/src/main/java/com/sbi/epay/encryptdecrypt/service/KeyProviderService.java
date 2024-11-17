@@ -1,6 +1,9 @@
 package com.sbi.epay.encryptdecrypt.service;
 
 import com.sbi.epay.encryptdecrypt.exception.EncryptionDecryptionException;
+import com.sbi.epay.encryptdecrypt.util.EncryptionDecryptionAlgo;
+import com.sbi.epay.encryptdecrypt.util.GCMIvLength;
+import com.sbi.epay.encryptdecrypt.util.GCMTagLength;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
 import jdk.jfr.Description;
@@ -31,9 +34,10 @@ public class KeyProviderService {
      * @param aeK encoded AEK(Aggregators Encryption Key)
      * @return a SecretKey MEK
      */
-    public static SecretKey getDecryptedMEK(String mek, String kek, String aeK) throws EncryptionDecryptionException {
+    public static SecretKey getDecryptedMEK(String mek, String kek, String aeK, EncryptionDecryptionAlgo algorithm, GCMIvLength gcmIvLength, GCMTagLength gcmTagLength) throws EncryptionDecryptionException {
         log.info("KeyProviderService :: getDecryptedMEK ");
-        String encodedMeK = DecryptionService.decryptMeK(mek, kek, aeK);
+        String encodedKeK = DecryptionService.decryptKey(kek, aeK, algorithm, gcmIvLength, gcmTagLength);
+        String encodedMeK = DecryptionService.decryptKey(mek, encodedKeK, algorithm, gcmIvLength, gcmTagLength);
         return DecryptionService.decodedSecretKey(encodedMeK);
     }
 }

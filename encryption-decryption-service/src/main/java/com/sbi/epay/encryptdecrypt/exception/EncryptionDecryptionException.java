@@ -1,7 +1,9 @@
 package com.sbi.epay.encryptdecrypt.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
- *
  * Class Name: EncryptionDecryptionException
  * *
  * Description:This class will be used for handling exceptions
@@ -12,23 +14,20 @@ package com.sbi.epay.encryptdecrypt.exception;
  * *
  * Version:1.1
  */
-public class EncryptionDecryptionException extends EncryptionDecryptionMgmtException {
+@Getter
+@Setter
+public class EncryptionDecryptionException extends RuntimeException {
 
+    private String errorCode;
+    private String errorMessage;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6449448937575072256L;
-	public EncryptionDecryptionException(String errorCode, String errorMessage) {
-		super(errorCode, errorMessage);
-	}
-
-	public EncryptionDecryptionException(String message, String errorCode, String errorMessage) {
-		super(message, errorCode, errorMessage);
-	}
-
-	public EncryptionDecryptionException(String message, Throwable cause, String errorCode, String errorMessage) {
-		super(message, cause, errorCode, errorMessage);
-	}
+    /**
+     * This is parametrised constructor for taking errorCode and  errorMessage
+     */
+    public EncryptionDecryptionException(String errorCode, String errorMessage) {
+        super(errorMessage);
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
 
 }

@@ -41,7 +41,6 @@ public class LoggingInterceptor implements HandlerInterceptor {
      * @param handler chosen handler to execute, for type and/or instance evaluation
      * @return boolean : returning true if corelation id present in request otherwise
      */
-    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
            loggerFactory.putMDC("userId", request.getHeader("userId") != null ? request.getHeader("userId") : "anonymous");
            loggerFactory.putMDC("correlationId", request.getHeader("X-Request-ID") != null ? request.getHeader("X-Request-ID") : UUID.randomUUID().toString().toUpperCase().replace(".", ""));
@@ -57,7 +56,6 @@ public class LoggingInterceptor implements HandlerInterceptor {
      * @param ex any exception thrown on handler execution, if any; this does not
      * include exceptions that have been handled through an exception resolver
      */
-    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         MDC.clear();
     }

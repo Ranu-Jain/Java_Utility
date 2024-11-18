@@ -1,7 +1,5 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.3'
-    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.sbi.epay.authentication'
@@ -25,9 +23,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.security:spring-security-config:6.3.4' // Choose appropriate version
+    implementation 'org.springframework.security:spring-security-web:6.3.4' // Choose appropriate version
+    implementation group: 'org.springframework', name: 'spring-web', version: '6.2.0'
 
     // for token generation
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6' //0.11.5
@@ -35,16 +33,22 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
-    /** Added logger jars */
-    implementation 'name:logging-service-1.0-SNAPSHOT-plain'
+    implementation name: 'logging-service-1.0-SNAPSHOT'
+    implementation 'javax.servlet:javax.servlet-api:3.1.0'
+    implementation 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'ch.qos.logback:logback-classic:1.4.12'
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
 
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
 }
 
 tasks.named('test') {

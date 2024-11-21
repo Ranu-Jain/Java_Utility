@@ -1,9 +1,12 @@
 package com.sbi.epay.authentication.config;
 
-import com.sbi.epay.authentication.common.AppConfig;
-import lombok.RequiredArgsConstructor;
+import com.sbi.epay.authentication.filter.JwtFilter;
+import com.sbi.epay.authentication.service.AuthenticationUserDetailsService;
+import com.sbi.epay.authentication.service.JwtAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,15 +16,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
-import com.sbi.epay.authentication.filter.JwtFilter;
-import com.sbi.epay.authentication.service.UserInfoServiceImpl;
-import org.springframework.security.web.session.SessionManagementFilter;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class Name: SecurityConfig
@@ -39,21 +41,18 @@ import org.springframework.security.web.session.SessionManagementFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
-    private final CorsConfig corsConfig;
-    private final AppConfig appConfig;
+    private final AuthenticationUserDetailsService userService;
+    private final List<String> appURL;
+    private final String[] whitelistURLs;
 
-    /**
-     * Defines a UserDetailsService bean for retrieving user-related data.
-     *
-     * @return A UserDetailsService implementation.
-     */
-    @Bean
-    UserDetailsService userDetailsService() {
-        return new UserInfoServiceImpl();
+    public SecurityConfig(JwtFilter jwtFilter, AuthenticationUserDetailsService userService, @Value("${cors.allowedOrigins}") List<String> appURL, @Value("${whitelisted.endpoints}") String[] whitelistURLs) {
+        this.jwtFilter = jwtFilter;
+        this.userService = userService;
+        this.appURL = appURL;
+        this.whitelistURLs = whitelistURLs;
     }
 
     /**
@@ -65,17 +64,20 @@ public class SecurityConfig {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-        httpSecurity.authorizeHttpRequests(
-                auth -> auth.requestMatchers(appConfig.getWhiteListUrls()).permitAll().anyRequest().authenticated());
-        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        httpSecurity.authenticationProvider(authenticationProvider());
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.addFilterBefore(corsConfig, SessionManagementFilter.class);
+        httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.OPTIONS).permitAll().requestMatchers(whitelistURLs).permitAll().anyRequest().permitAll()).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).cors(cors -> cors.configurationSource(request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(appURL);
+            config.setAllowedMethods(Collections.singletonList("*"));
+            config.setAllowedHeaders(Collections.singletonList("*"));
+            return config;
+        }));
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     /**
@@ -84,12 +86,13 @@ public class SecurityConfig {
      * @return The configured DaoAuthenticationProvider.
      */
     @Bean
-    AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userService.userDetailsService());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
     }
+
 
     /**
      * Defines a PasswordEncoder bean for encoding passwords.
@@ -101,16 +104,5 @@ public class SecurityConfig {
         return NoOpPasswordEncoder.getInstance();
     }
 
-    /**
-     * Configures an AuthenticationManager bean for managing authentication.
-     *
-     * @param config The AuthenticationConfiguration to use.
-     * @return The configured AuthenticationManager.
-     * @throws Exception if an error occurs during creation.
-     */
-    @Bean
-    AuthenticationManager AuthenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
 
 }

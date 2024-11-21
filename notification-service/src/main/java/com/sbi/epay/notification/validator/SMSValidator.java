@@ -24,9 +24,9 @@ import java.util.List;
  * *
  * Version:1.0
  */
-public class SMSValidator {
+public class SmsValidator {
 
-    static LoggerUtility logger = LoggerFactoryUtility.getLogger(SMSValidator.class);
+    static LoggerUtility logger = LoggerFactoryUtility.getLogger(SmsValidator.class);
     /**
      * This method will be used for validating the sms
      *

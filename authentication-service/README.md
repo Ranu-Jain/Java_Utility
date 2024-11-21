@@ -99,7 +99,7 @@ Before generating JWT token please add values in AuthRequest class.
 
 Use 'TokenType' enumeration to pass parameter as TokenType while generating JWT token. Here's how :
 
-     import com.sbi.epay.authentication.enumeration.TokenType
+     import com.sbi.epay.authentication.util.enums.TokenType
 
      TokenType.ORDER
      //or
@@ -115,7 +115,7 @@ Use 'TokenType' enumeration to pass parameter as TokenType while generating JWT 
 Use the `AuthService` interface to generate a JWT token. Here’s how:
 
     package com.sbi.epay.authentication.service;
-    String token = generateToken(AuthRequest authRequest) 
+    String token = generateToken(AuthRequest tokenRequest) 
 
 ## Request Details for generating JWT token.
      // Example 1: Required fields to Generate JWT token for CUSTOMER/ORDER

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
  * Version:1.0
  */
 
-
 @Data
 @Component
 @RequiredArgsConstructor

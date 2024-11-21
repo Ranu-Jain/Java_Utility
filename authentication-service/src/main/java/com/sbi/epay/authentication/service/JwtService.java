@@ -1,31 +1,23 @@
 package com.sbi.epay.authentication.service;
 
-import java.security.Key;
-import java.text.MessageFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
-import com.sbi.epay.authentication.common.ErrorConstants;
-import com.sbi.epay.authentication.enumeration.TokenType;
-import com.sbi.epay.authentication.exceptionhandler.AuthenticationException;
-import com.sbi.epay.authentication.model.AuthRequest;
-import com.sbi.epay.authentication.model.UserInfo;
+import com.sbi.epay.authentication.common.AppConfig;
+import com.sbi.epay.authentication.model.*;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
-import com.sbi.epay.authentication.common.AppConfig;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.util.StringUtils;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Class Name: JwtService
@@ -43,121 +35,90 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class JwtService {
     private static final LoggerUtility logger = LoggerFactoryUtility.getLogger(JwtService.class);
-    public static final String TOKEN_TYPE = "Token Type";
-    public static final String USERNAME = "username";
-    public static final String ROLE = "role";
-    public static final String TYPE = "tokenType";
-    public static final String CUSTOMER_ID = "customerId";
-    public static final String MID = "mID";
     private final AppConfig appConfig;
-    UserInfo userInfo = new UserInfo();
-
-
-    /**
-     * generates token as per authRequest values.
-     *
-     * @param authRequest
-     * @return JWT token in String form.
-     */
-    public String generateToken(AuthRequest authRequest) {
-        logger.info("ClassName - JwtService,MethodName - generateToken, generates token as per authRequest values started.");
-        String res = "";
-        switch (authRequest.getTokenType()) {
-            case CUSTOMER, ORDER -> res = generateTokenWithApiSecret(authRequest);
-            case TRANSACTION -> res = generateTokenWithHash(authRequest);
-            case MERCHANT -> res = generateTokenWithUsernamePassword(authRequest);
-            default -> {
-                logger.error("Error occurred while JWT token generation.");
-                throw new AuthenticationException(ErrorConstants.INVALID_ERROR_CODE, MessageFormat.format(ErrorConstants.INVALID_ERROR_MESSAGE, TOKEN_TYPE, TOKEN_TYPE, TokenType.values()));
-            }
-        }
-        logger.info("ClassName - JwtService,MethodName - generateToken, generates token as per authRequest values ended.");
-        return res;
-    }
 
     /**
      * Generates a JWT token with the specified claims, secret key, and expiration time.
      *
      * @param claims         A map of claims to include in the token.
-     * @param secretKey      The secret key used to sign the token.
+     * @param userName       The secret key used to sign the token.
      * @param expirationTime The expiration time of the token in milliseconds.
      * @return A signed JWT token as a string.
      */
-    private String generateToken(Map<String, Object> claims, String secretKey, long expirationTime) {
+    private String generateToken(Map<String, Object> claims, String userName, int expirationTime) {
         logger.info("ClassName - JwtService,MethodName - generateToken,generate a JWT token  with the specified claims, secret key, and expiration time.");
-        return Jwts.builder().claims(claims).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + expirationTime)).signWith(SignatureAlgorithm.HS512, secretKey).compact();
+        return Jwts.builder().claims(claims).subject(userName) // Subject (e.g., user ID)
+                .issuedAt(new Date(System.currentTimeMillis()))// Issued time
+                .expiration(DateUtils.addHours(new Date(), expirationTime))
+                .signWith(SignatureAlgorithm.HS512, appConfig.getSecretKey()) // Use the HS512 algorithm
+                .compact();
+
 
     }
 
     /**
      * Generates a JWT token using a username, expirationTime and role.
      *
-     * @param authRequest
+     * @param userTokenRequest
      * @returnA signed JWT token as a string.
      */
-    private String generateTokenWithUsernamePassword(AuthRequest authRequest) {
+    public String generateUserLoginToken(UserTokenRequest userTokenRequest) {
         logger.info("ClassName - JwtService,MethodName - generateTokenWithUsernamePassword, Generates a JWT token using a username, expirationTime and role.");
-        try {
-            Map<String, Object> claims = new HashMap<>();
-            claims.put(USERNAME, userInfo.getUsername());
-            claims.put(ROLE, authRequest.getRole());
-            claims.put(TYPE, authRequest.getTokenType());
-            claims.put(CUSTOMER_ID, authRequest.getCustomerId());
-            return generateToken(claims, appConfig.getSecretKey(), authRequest.getExpirationTime());
-        } catch (Exception e) {
-            logger.error("Error -> ", e);
-            throw new AuthenticationException(ErrorConstants.UNAUTHORIZED_ERROR_CODE, ErrorConstants.UNAUTHORIZED_ERROR_MESSAGE);
-        }
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(EPayPlatformJwtClaimsSet.USERNAME, userTokenRequest.getUsername());
+        claims.put(EPayPlatformJwtClaimsSet.ROLE, userTokenRequest.getRoles());
+        claims.put(EPayPlatformJwtClaimsSet.TYPE, userTokenRequest.getTokenType());
+        return generateToken(claims, appConfig.getSecretKey(), userTokenRequest.getExpirationTime());
+    }
 
-
+    /**
+     * Generates a JWT token for a payment.
+     *
+     * @param paymentTokenRequest
+     * @returnA signed JWT token as a string.
+     */
+    public String generatePaymentToken(PaymentTokenRequest paymentTokenRequest) {
+        logger.info("ClassName - JwtService,MethodName - generateTokenWithUsernamePassword, Generates a JWT token using a username, expirationTime and role.");
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(EPayPlatformJwtClaimsSet.USERNAME, paymentTokenRequest.getSbiOrderReferenceNumber());
+        claims.put(EPayPlatformJwtClaimsSet.ROLE, paymentTokenRequest.getRoles());
+        claims.put(EPayPlatformJwtClaimsSet.TYPE, paymentTokenRequest.getTokenType());
+        claims.put(EPayPlatformJwtClaimsSet.ORDER_NUMBER, paymentTokenRequest.getSbiOrderReferenceNumber());
+        claims.put(EPayPlatformJwtClaimsSet.ATRN_NUMBER, paymentTokenRequest.getAtrnNumber());
+        claims.put(EPayPlatformJwtClaimsSet.MID, paymentTokenRequest.getMid());
+        return generateToken(claims, appConfig.getSecretKey(), paymentTokenRequest.getExpirationTime());
     }
 
     /**
      * Generates a JWT token using an API key , role, expirationTime and secret.
      *
-     * @param authRequest
+     * @param accessTokenRequest
      * @return A signed JWT token as a string.
      */
-    private String generateTokenWithApiSecret(AuthRequest authRequest) {
-        logger.info("ClassName - JwtService,MethodName - generateTokenWithApiSecret, Generates a JWT token using an API key , role, expirationTime and secret.");
-        try {
-            Map<String, Object> claims = new HashMap<>();
-            claims.put(USERNAME, userInfo.getUsername());
-            claims.put(ROLE, authRequest.getRole());
-            claims.put(TYPE, authRequest.getTokenType());
-            return generateToken(claims, appConfig.getSecretKey(), authRequest.getExpirationTime());
-        } catch (Exception e) {
-            logger.error("Error -> ", e);
-            throw new AuthenticationException(ErrorConstants.UNAUTHORIZED_ERROR_CODE, ErrorConstants.UNAUTHORIZED_ERROR_MESSAGE);
-        }
+    public String generateAccessToken(AccessTokenRequest accessTokenRequest) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(EPayPlatformJwtClaimsSet.USERNAME, accessTokenRequest.getMid());
+        claims.put(EPayPlatformJwtClaimsSet.MID, accessTokenRequest.getMid());
+        claims.put(EPayPlatformJwtClaimsSet.ROLE, accessTokenRequest.getRoles());
+        claims.put(EPayPlatformJwtClaimsSet.TYPE, accessTokenRequest.getTokenType());
+        return generateToken(claims, accessTokenRequest.getMid(), accessTokenRequest.getExpirationTime());
     }
 
     /**
      * Generates a JWT token using a hash of the order reference number, expiration time and merchant ID.
      *
-     * @param authRequest
+     * @param transactionTokenRequest
      * @return A signed JWT token as a string.
      */
-    private String generateTokenWithHash(AuthRequest authRequest) {
+    public String generateTransactionToken(TransactionTokenRequest transactionTokenRequest) {
         logger.info("ClassName - JwtService,MethodName - generateTokenWithHash, Generates a JWT token using a hash of the order reference number, expiration time and merchant ID.");
-        try {
-            Map<String, Object> claims = new HashMap<>();
-            if (StringUtils.hasText(authRequest.getSbiOrderReference())) {
-                claims.put("orderNumber", authRequest.getSbiOrderReference());
-            }
-            claims.put(MID, authRequest.getMid());
-            claims.put(USERNAME, userInfo.getUsername());
-            claims.put(ROLE, authRequest.getRole());
-            claims.put(TYPE, authRequest.getTokenType());
-            if (StringUtils.hasText(authRequest.getCustomerId())) {
-                claims.put(CUSTOMER_ID, authRequest.getCustomerId());
-            }
-            return generateToken(claims, appConfig.getSecretKey(), authRequest.getExpirationTime());
-        } catch (Exception e) {
-            logger.error("Error -> ", e);
-            throw new AuthenticationException(ErrorConstants.UNAUTHORIZED_ERROR_CODE, ErrorConstants.UNAUTHORIZED_ERROR_MESSAGE);
-        }
-
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(EPayPlatformJwtClaimsSet.ORDER_NUMBER, transactionTokenRequest.getSbiOrderReferenceNumber());
+        claims.put(EPayPlatformJwtClaimsSet.MID, transactionTokenRequest.getMid());
+        claims.put(EPayPlatformJwtClaimsSet.USERNAME, transactionTokenRequest.getSbiOrderReferenceNumber());
+        claims.put(EPayPlatformJwtClaimsSet.ROLE, transactionTokenRequest.getRoles());
+        claims.put(EPayPlatformJwtClaimsSet.TYPE, transactionTokenRequest.getTokenType());
+        return generateToken(claims, appConfig.getSecretKey(), transactionTokenRequest.getExpirationTime());
     }
 
 
@@ -167,7 +128,7 @@ public class JwtService {
      * @param token as a String
      * @return Claims of the token
      */
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         logger.info("ClassName - JwtService,MethodName - getAllClaimsFromToken, getting all claims from token.");
         return Jwts.parser().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
     }
@@ -194,7 +155,7 @@ public class JwtService {
     public String getUsernameFromToken(String token) {
         logger.info("ClassName - JwtService,MethodName - getUsernameFromToken, username from token.");
         final Claims claims = getAllClaimsFromToken(token);
-        return claims.get(USERNAME) == null ? null : String.valueOf(claims.get(USERNAME));
+        return claims.get(EPayPlatformJwtClaimsSet.USERNAME) == null ? null : String.valueOf(claims.get(EPayPlatformJwtClaimsSet.USERNAME));
     }
 
 
@@ -222,7 +183,7 @@ public class JwtService {
     private Boolean isTokenExpired(String token) {
         logger.info("ClassName - JwtService,MethodName - isTokenExpired, getting expiration time from token.");
         final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date(30));
+        return expiration.before(new Date());
     }
 
     /**
@@ -231,9 +192,9 @@ public class JwtService {
      * @param token
      * @return Date from token
      */
-    private Date getExpirationDateFromToken(String token) {
+    protected Date getExpirationDateFromToken(String token) {
         logger.info("ClassName - JwtService,MethodName - getExpirationDateFromToken, getting expiration time from token.");
-        return (Date) getClaimFromToken(token, Claims::getExpiration);
+        return getClaimFromToken(token, Claims::getExpiration);
 
     }
 
@@ -241,37 +202,15 @@ public class JwtService {
      * Validate token using user details and expiration time.
      *
      * @param token
-     * @param userDetails
+     * @param authenticateUser
      * @return Boolean if username and expiration is valid then return true else return false.
      */
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        logger.info("ClassName - JwtService,MethodName - validateToken, Validate token using user details and expiration time.");
-        try {
-            final String username = getUsernameFromToken(token);
-            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-
-        } catch (Exception e) {
-            logger.error("Error -> ", e);
-            throw new AuthenticationException(ErrorConstants.UNAUTHORIZED_ERROR_CODE, ErrorConstants.UNAUTHORIZED_ERROR_MESSAGE);
-        }
+    public boolean isTokenValid(String token, EPayPrincipal authenticateUser) {
+        final String userName = getUsernameFromToken(token);
+        return (userName.equals(authenticateUser.getUsername())) && !isTokenExpired(token);
     }
 
     /**
-     * TODO: This is created for future purponse for getting API Key from token.
-     * <p>
-     * Get apiKey from JWT token
-     *
-     * @param token
-     * @return String API Key from token
-     */
-    private String getApiKeyFromToken(String token) {
-        logger.info("ClassName - JwtService,MethodName - getApiKeyFromToken, getting apiKey from JWT token.");
-        final Claims claims = getAllClaimsFromToken(token);
-        return claims.get("apiKey") == null ? null : String.valueOf(claims.get("apiKey"));
-    }
-
-    /**
-     * TODO: This is created for future purponse for getting Role from token.
      * <p>
      * Get role from JWT token
      *
@@ -281,7 +220,7 @@ public class JwtService {
     private String getRoleFromToken(String token) {
         logger.info("ClassName - JwtService,MethodName - getApiKeyFromToken, getting role from JWT token.");
         final Claims claims = getAllClaimsFromToken(token);
-        return claims.get(ROLE) == null ? null : String.valueOf(claims.get(ROLE));
+        return claims.get(EPayPlatformJwtClaimsSet.ROLE) == null ? null : String.valueOf(claims.get(EPayPlatformJwtClaimsSet.ROLE));
     }
 
 

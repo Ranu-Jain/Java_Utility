@@ -1,26 +1,38 @@
 package com.sbi.epay.authentication.filter;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.util.List;
+import java.util.UUID;
 
 import com.sbi.epay.authentication.common.ErrorConstants;
-import com.sbi.epay.authentication.exceptionhandler.AuthenticationException;
+import com.sbi.epay.authentication.exception.AuthenticationException;
+import com.sbi.epay.authentication.model.EPayPrincipal;
+import com.sbi.epay.authentication.model.JwtAuthenticationToken;
+import com.sbi.epay.authentication.service.AuthenticationUserService;
+import com.sbi.epay.authentication.service.JwtAuthenticationProvider;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.sbi.epay.authentication.service.JwtService;
-import com.sbi.epay.authentication.service.UserInfoServiceImpl;
-
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.sbi.epay.authentication.service.JwtService;
+
 
 /**
  * Class Name: JwtFilter
@@ -41,11 +53,15 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtFilter extends OncePerRequestFilter {
     private static final LoggerUtility loggerUtility = LoggerFactoryUtility.getLogger(JwtFilter.class);
     private final JwtService jwtService;
-    private final UserInfoServiceImpl userInfoService;
+    private final AuthenticationUserService authenticationUserService;
 
     private final String AUTHORIZATION = "Authorization";
     private final String BEARER = "Bearer ";
-
+    private List<String> whitelistURLs;
+    @Value("${whitelisted.endpoints}")
+    public void setWhitelistURLs( List<String> whitelistURLs) {
+        this.whitelistURLs = whitelistURLs;
+    }
     /**
      * This method filters incoming requests to extract and validate the JWT token.
      * If the token is valid, it sets the authentication in the security context.
@@ -55,37 +71,81 @@ public class JwtFilter extends OncePerRequestFilter {
      * @param filterChain The filter chain to continue processing.
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        loggerUtility.info("ClassName - JwtFilter,MethodName - doFilterInternal, started.");
-        String authHeader = request.getHeader(AUTHORIZATION);
-        String token = null;
-        String username = null;
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) {
         try {
-
-            if (authHeader != null && authHeader.startsWith(BEARER)) {
-                loggerUtility.info("authHeader started with : {}", authHeader);
-                token = authHeader.substring(7);
-                username = jwtService.getUsernameFromToken(token);
+            String correlationId = request.getHeader("X-Correlation-ID");
+            if (StringUtils.isEmpty(correlationId)) {
+                correlationId = UUID.randomUUID().toString();
             }
+            LoggerFactoryUtility.putMDC("requestId", correlationId);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userdetails = userInfoService.loadUserByUsername(username);
-                if (Boolean.TRUE.equals(jwtService.validateToken(token, userdetails))) {
-                    loggerUtility.info("JWT token is validated and returned true.");
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userdetails, null, userdetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
+            final String authHeader = request.getHeader("Authorization");
+            String requestUri = request.getRequestURI();
+
+            if (whiteListingCheck(request, response, filterChain, authHeader, requestUri)) return;
+
+            mandatoryCheck(authHeader, requestUri);
+
+            if (loginAPICall(request, response, filterChain, authHeader)) return;
+
+            authentication(request, authHeader);
 
             filterChain.doFilter(request, response);
-        } catch (ServletException | IOException | RuntimeException e) {
-            loggerUtility.error("Error ->  ", e);
-            throw new AuthenticationException(ErrorConstants.UNAUTHORIZED_ERROR_CODE, ErrorConstants.UNAUTHORIZED_ERROR_MESSAGE);
-
+        } catch (Exception exception) {
+            LoggerFactoryUtility.clearMDCContext();
         }
-        loggerUtility.info("ClassName - JwtFilter,MethodName - doFilterInternal, ended.");
+    }
+
+    private void authentication(HttpServletRequest request, String authHeader) throws ParseException {
+        final String jwt = authHeader.substring(7);
+        final String userName = jwtService.getUsernameFromToken(jwt);
+        if (StringUtils.isNotEmpty(userName) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            EPayPrincipal authenticateUser = authenticationUserService.loadUserByUserName(userName)
+                    .orElseThrow(() -> new AuthenticationException(ErrorConstants.NOT_FOUND_ERROR_CODE, MessageFormat.format(ErrorConstants.NOT_FOUND_ERROR_MESSAGE, "UserName")));
+            if ( jwtService.isTokenValid(jwt, authenticateUser)) {
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
+                jwtAuthenticationToken.setAuthenticated(true);
+                JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(jwtService);
+                Authentication authenticate = jwtAuthenticationProvider.authenticate(jwtAuthenticationToken);
+                context.setAuthentication(authenticate);
+                SecurityContextHolder.setContext(context);
+            }
+        }
+    }
+
+    private static boolean loginAPICall(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String authHeader) throws IOException, ServletException {
+        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
+            filterChain.doFilter(request, response);
+            return true;
+        }
+        return false;
+    }
+
+    private static void mandatoryCheck(String authHeader, String requestUri) {
+        if ((StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer "))
+                && (!StringUtils.endsWith(requestUri, "/token") || !StringUtils.endsWith(requestUri, "/login"))){
+            throw new JwtException("Token is required.");
+        }
+    }
+
+    private boolean whiteListingCheck(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String authHeader, String requestUri) throws IOException, ServletException {
+        if ((StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer "))){
+            String withoutContext = requestUri.replaceFirst(request.getContextPath(),"");
+            for(String whitelistURL : whitelistURLs){
+                if(withoutContext.startsWith(whitelistURL)){
+                    filterChain.doFilter(request, response);
+                    return true;
+                }
+            }
+        }
+        if ((StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) && request.getMethod().equalsIgnoreCase(HttpMethod.OPTIONS.name())) {
+            filterChain.doFilter(request, response);
+            return true;
+        }
+        return false;
     }
 
 }

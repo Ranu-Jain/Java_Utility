@@ -2,13 +2,13 @@ package com.sbi.epay.logging.utility;
 
 import java.util.UUID;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -42,8 +42,8 @@ public class LoggingInterceptor implements HandlerInterceptor {
      * @return boolean : returning true if corelation id present in request otherwise
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-           loggerFactory.putMDC("userId", request.getHeader("userId") != null ? request.getHeader("userId") : "anonymous");
-           loggerFactory.putMDC("correlationId", request.getHeader("X-Request-ID") != null ? request.getHeader("X-Request-ID") : UUID.randomUUID().toString().toUpperCase().replace(".", ""));
+        loggerFactory.putMDC("userId", request.getHeader("userId") != null ? request.getHeader("userId") : "anonymous");
+        loggerFactory.putMDC("correlationId", request.getHeader("X-Request-ID") != null ? request.getHeader("X-Request-ID") : UUID.randomUUID().toString().toUpperCase().replace(".", ""));
         return true;
     }
 

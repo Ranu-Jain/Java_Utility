@@ -1,6 +1,8 @@
 package com.sbi.epay.authentication.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Class Name: ErrorDto
@@ -15,6 +17,8 @@ import lombok.AllArgsConstructor;
  */
 
 @AllArgsConstructor
+@Getter
+@Setter
 public class ErrorDto {
     private String errorCode;
     private String errorMessage;

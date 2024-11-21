@@ -1,4 +1,4 @@
-package com.sbi.epay.authentication.enumeration;
+package com.sbi.epay.authentication.util.enums;
 
 
 /**
@@ -16,9 +16,9 @@ package com.sbi.epay.authentication.enumeration;
 
 public enum TokenType {
     /**
-     * Represents a token used for order-related operations.
+     * Represents a token used for access-related operations.
      */
-    ORDER,
+    ACCESS,
 
     /**
      * Represents a token used for transaction-related operations.
@@ -26,12 +26,12 @@ public enum TokenType {
     TRANSACTION,
 
     /**
-     * Represents a token used for customer-related operations.
+     * Represents a token used for payment-related operations.
      */
-    CUSTOMER,
+    PAYMENT,
 
     /**
-     * Represents a token used for merchant-related operation.
+     * Represents a token used for user based operation like merchant, admin.
      */
-    MERCHANT;
+    USER;
 }

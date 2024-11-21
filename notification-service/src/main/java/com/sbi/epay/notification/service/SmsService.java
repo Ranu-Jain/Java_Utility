@@ -6,7 +6,7 @@ import com.sbi.epay.notification.exception.NotificationException;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
 import com.sbi.epay.notification.thirdpartyservice.SmsClient;
-import com.sbi.epay.notification.validator.SMSValidator;
+import com.sbi.epay.notification.validator.SmsValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public final class SmsService {
      */
     public boolean sendSMS(SmsDTO smsDTO) throws JsonProcessingException, NotificationException {
         logger.info("ClassName - SmsService,MethodName -sendSMS, Method-Start");
-        SMSValidator.validateSMS(smsDTO);
+        SmsValidator.validateSMS(smsDTO);
         logger.info("ClassName - SmsService,MethodName -sendSMS, Method-end");
         return smsClient.sendSMS(smsDTO);
     }

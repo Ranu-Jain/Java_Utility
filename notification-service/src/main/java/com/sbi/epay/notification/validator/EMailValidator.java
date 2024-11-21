@@ -24,8 +24,8 @@ import java.util.List;
  * *
  * Version:1.0
  */
-public class EMailValidator {
-    static LoggerUtility logger = LoggerFactoryUtility.getLogger(EMailValidator.class);
+public class EmailValidator {
+    static LoggerUtility logger = LoggerFactoryUtility.getLogger(EmailValidator.class);
 
     /**
      * This method will be used for validating the email

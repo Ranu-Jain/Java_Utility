@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-}
+ }
 
 group = 'com.sbi.epay.authentication'
 version = '0.0.1-SNAPSHOT'
@@ -19,27 +19,28 @@ configurations {
 
 repositories {
     mavenCentral()
-    flatDir(dir : "lib")
+    flatDir {
+        dirs "lib"
+    }
 }
 
 dependencies {
-    implementation 'org.springframework.security:spring-security-config:6.3.4' // Choose appropriate version
-    implementation 'org.springframework.security:spring-security-web:6.3.4' // Choose appropriate version
-    implementation group: 'org.springframework', name: 'spring-web', version: '6.2.0'
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.3.4'
+    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '6.3.4'
+    implementation group: 'org.springframework.security', name: 'spring-security-config', version: '6.3.4'
+
 
     // for token generation
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6' //0.11.5
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
 
     implementation name: 'logging-service-1.0-SNAPSHOT'
-    implementation 'javax.servlet:javax.servlet-api:3.1.0'
     implementation 'org.slf4j:slf4j-simple:1.7.30'
     implementation 'ch.qos.logback:logback-classic:1.4.12'
     implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
-
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.30'

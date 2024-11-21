@@ -17,7 +17,7 @@
         </encoder>
     </appender>
 
-    <!-- Including MDC data in the log pattern --> 
+    <!-- Including MDC data in the log pattern -->
 
     <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/application.json</file>
@@ -25,33 +25,33 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/application.%d{yyyy-MM-dd}.json</fileNamePattern>
             <maxHistory>30</maxHistory>
-        </rollingPolicy> 
+        </rollingPolicy>
 
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <timestamp>
                     <timeZone>UTC</timeZone>
-                </timestamp> 
+                </timestamp>
 
                 <pattern>
                     <pattern>
                         {
-                            "timestamp": "%date",
-                            "level": "%level",
-                            "logger": "%logger",
-                            "thread": "%thread",
-                            "message": "%message",
-                            "userId": "%X{userId}",
-                            "requestId": "%X{requestId}",
-                            "exception": "%ex"
+                        "timestamp": "%date",
+                        "level": "%level",
+                        "logger": "%logger",
+                        "thread": "%thread",
+                        "message": "%message",
+                        "userId": "%X{userId}",
+                        "requestId": "%X{requestId}",
+                        "exception": "%ex"
                         }
                     </pattern>
                 </pattern>
             </providers>
         </encoder>
-    </appender> 
+    </appender>
 
-     <appender name="Logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <appender name="Logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>localhost:5000</destination>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
@@ -61,22 +61,22 @@
                 <pattern>
                     <pattern>
                         {
-                            "timestamp": "%date",
-                            "level": "%level",
-                            "logger": "%logger",
-                            "thread": "%thread",
-                             "mdc": {
-                                "userId": "%X{userId}",
-                                "requestId": "%X{requestId}"
-                            },
-                          "message": "%message",
-                            "exception": "%ex"
+                        "timestamp": "%date",
+                        "level": "%level",
+                        "logger": "%logger",
+                        "thread": "%thread",
+                        "mdc": {
+                        "userId": "%X{userId}",
+                        "requestId": "%X{requestId}"
+                        },
+                        "message": "%message",
+                        "exception": "%ex"
                         }
                     </pattern>
                 </pattern>
             </providers>
         </encoder>
-    </appender> 
+    </appender>
 
     <root level="TRACE">
         <appender-ref ref="CONSOLE" />

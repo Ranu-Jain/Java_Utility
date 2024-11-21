@@ -24,7 +24,7 @@ import javax.crypto.SecretKey;
  */
 @Description("This class will provide a SecretKey")
 public class KeyProviderService {
-    private static final LoggerUtility log= LoggerFactoryUtility.getLogger(KeyGeneratorService.class);
+    private static final LoggerUtility log= LoggerFactoryUtility.getLogger(KeyProviderService.class);
 
     /**
      * This method will be used to get MEK .

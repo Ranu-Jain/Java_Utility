@@ -6,7 +6,7 @@ import com.sbi.epay.notification.exception.NotificationException;
 import com.sbi.epay.logging.utility.LoggerFactoryUtility;
 import com.sbi.epay.logging.utility.LoggerUtility;
 import com.sbi.epay.notification.thirdpartyservice.EmailClient;
-import com.sbi.epay.notification.validator.EMailValidator;
+import com.sbi.epay.notification.validator.EmailValidator;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,8 +38,7 @@ public class EmailService {
      */
     public boolean sendEmail(EmailDTO emailDTO) throws NotificationException {
         logger.info("ClassName - EmailService, MethodName -sendEmail - start");
-        EMailValidator.validateEMAIL(emailDTO);
-
+        EmailValidator.validateEMAIL(emailDTO);
         logger.info("ClassName - EmailService, MethodName -sendEmail - end");
         return emailClient.sendEmail(emailDTO);
     }

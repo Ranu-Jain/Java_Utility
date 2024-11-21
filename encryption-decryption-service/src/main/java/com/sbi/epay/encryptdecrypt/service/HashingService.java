@@ -13,7 +13,7 @@ import java.text.MessageFormat;
 
 public class HashingService {
 
-    private static final LoggerUtility log = LoggerFactoryUtility.getLogger(EncryptionService.class);
+    private static final LoggerUtility log = LoggerFactoryUtility.getLogger(HashingService.class);
 
     /**
      * This method will be used for generating HASH values .
@@ -22,7 +22,7 @@ public class HashingService {
      * @return the byte[] array of HASHED DATA
      */
 
-    public static byte[] generateHash(@NonNull byte[] data, @NonNull HashAlgorithm algorithm) throws EncryptionDecryptionException {
+    public static byte[] generateHash(byte @NonNull [] data, @NonNull HashAlgorithm algorithm) throws EncryptionDecryptionException {
         try {
             log.debug("HashingService :: generateHash  data {}, algorithm {}", data, algorithm);
             MessageDigest digest = MessageDigest.getInstance(algorithm.getAlgorithmName());

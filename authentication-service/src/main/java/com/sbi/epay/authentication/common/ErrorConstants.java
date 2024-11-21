@@ -13,16 +13,12 @@ package com.sbi.epay.authentication.common;
  */
 
 public final class ErrorConstants {
-
-    private ErrorConstants () {}
-
     public static final String MANDATORY_ERROR_CODE = "1001";
     public static final String MANDATORY_ERROR_MESSAGE = "{0} is mandatory.";
-
     public static final String INVALID_ERROR_CODE = "1002";
-    public static final String INVALID_ERROR_MESSAGE = "{0} is invalid. Valid {1} are {2} ";
-
-    public static final String UNAUTHORIZED_ERROR_CODE="401";
-    public static final String UNAUTHORIZED_ERROR_MESSAGE="Unauthorized";
-
+    public static final String INVALID_ERROR_MESSAGE = "{0} is invalid.";
+    public static final String NOT_FOUND_ERROR_CODE = "1003";
+    public static final String NOT_FOUND_ERROR_MESSAGE = "{0} is not found. Please provide the correct User information.";
+    private ErrorConstants() {
+    }
 }

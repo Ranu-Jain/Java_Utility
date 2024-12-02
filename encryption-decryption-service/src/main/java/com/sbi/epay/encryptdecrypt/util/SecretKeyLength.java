@@ -14,4 +14,13 @@ public enum SecretKeyLength {
     SecretKeyLength(int lengthInBits) {
         this.lengthInBits = lengthInBits;
     }
+
+    public static SecretKeyLength fromLengthInBits(int lengthInBits) {
+        return switch (lengthInBits) {
+            case 128 -> SecretKeyLength.AES_128;
+            case 192 -> SecretKeyLength.AES_192;
+            case 256 -> SecretKeyLength.AES_256;
+            default -> throw new IllegalArgumentException("No SecretKeyLength found for lengthInBits: " + lengthInBits);
+        };
+    }
 }

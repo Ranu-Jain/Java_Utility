@@ -24,6 +24,7 @@ public class EPayPrincipal implements UserDetails {
     private String transactionRef;
     private String passCode;
     private String tokenType;
+    private String token;
     private List<String> userRole;
 
     @Override

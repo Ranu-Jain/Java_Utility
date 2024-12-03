@@ -30,7 +30,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     }
 
     private JwtAuthenticationToken createSuccessAuthentication(String jwt, Claims claims) {
-        EPayPrincipal principal = derivePrincipal(claims);
+        EPayPrincipal principal = derivePrincipal(jwt, claims);
         JwtAuthenticationToken result = new JwtAuthenticationToken(jwt,
                 principal, principal.getAuthorities());
         result.setDetails(claims.toString());
@@ -38,7 +38,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         return result;
     }
 
-    private EPayPrincipal derivePrincipal(Claims claims) {
+    private EPayPrincipal derivePrincipal(String jwt, Claims claims) {
         EPayPrincipal authenticateEntity = new EPayPrincipal();
         if(ObjectUtils.isEmpty(claims.get(EPayPlatformJwtClaimsSet.ROLE))) {
             authenticateEntity.setUserRole(List.of("User"));
@@ -50,6 +50,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         authenticateEntity.setOrderRef(claims.get(EPayPlatformJwtClaimsSet.ORDER_NUMBER, String.class));
         authenticateEntity.setTransactionRef(claims.get(EPayPlatformJwtClaimsSet.ATRN_NUMBER, String.class));
         authenticateEntity.setTokenType(claims.get(EPayPlatformJwtClaimsSet.TYPE, String.class));
+        authenticateEntity.setToken(jwt);
         return authenticateEntity;
     }
 
